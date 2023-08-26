@@ -10,6 +10,12 @@ type SigninUsecase struct{
 }
 
 
-func (s SigninUsecase)  Signin(user models.User) models.User{
+func (s *SigninUsecase)  Signin(user models.User)( e error , u *models.User){
+	 e , u = s.Signin(user)
 
+	 if e != nil{
+		return e , nil
+	 }
+
+	 return nil , u
 }

@@ -6,6 +6,6 @@ import (
 )
 
 type SingnupDomain interface{
-	 Singup(user models.User) models.User 
+	 Singup(user models.User) ( error,  models.User )
 }
 
