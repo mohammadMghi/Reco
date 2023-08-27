@@ -1,11 +1,10 @@
 package repo
 
 import (
-	"database/sql"
+ 
 	"fmt"
-
-	"github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/driver/mysql"
+ 
 	"github.com/mohammadMghi/accountService/domain"
 	"github.com/mohammadMghi/accountService/models"
 	"gorm.io/gorm"
@@ -25,9 +24,7 @@ func connectToDB() (*gorm.DB, error) {
 	
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
-
-
-
+ 
 
 	if err != nil{
 		return nil , err
@@ -44,7 +41,7 @@ func (m *Mysql)  Signin(user models.User) ( error ,*models.User){
         fmt.Println("Error connecting to database:", err)
         return err , nil
     }
-    defer db.Close()
+    // defer db.Close()
 
     newUser := models.User{
         PhoneNumber  : user.PhoneNumber,

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-sql-driver/mysql"
+ 
 	"github.com/mohammadMghi/accountService/models"
 	"github.com/mohammadMghi/accountService/repo"
 	"github.com/mohammadMghi/accountService/usecase"
