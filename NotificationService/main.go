@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 
+	"github.com/mohammadMghi/notificationService/models"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -16,7 +19,7 @@ func main(){
 	defer ch.Close()
 	
 	q, err := ch.QueueDeclare(
-	  "hello", // name
+	  "send_email_auth", // name
 	  false,   // durable
 	  false,   // delete when unused
 	  false,   // exclusive
@@ -25,7 +28,7 @@ func main(){
 	)
 	failOnError(err, "Failed to declare a queue")
 
-	msgs, err := ch.Consume(
+	user, err := ch.Consume(
 		q.Name, // queue
 		"",     // consumer
 		true,   // auto-ack
@@ -39,8 +42,15 @@ func main(){
 	  var forever chan struct{}
 	  
 	  go func() {
-		for d := range msgs {
-		  log.Printf("Received a message: %s", d.Body)
+		for u := range user {
+			var user models.User
+			err := json.Unmarshal(u.Body, &user)
+			if err != nil {
+				log.Println("Error:", err)
+				continue
+			}
+
+			fmt.Println("Received message:", user)
 		}
 	  }()
 	  

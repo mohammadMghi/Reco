@@ -16,7 +16,7 @@ type Mysql struct{
 }
 
 func connectToDB() (*gorm.DB, error) {
-	dsn := "user:pass@tcp(127.0.0.1:3306)/recoAccountService?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:852456@tcp(127.0.0.1:3306)/restapi?charset=utf8mb4&parseTime=True&loc=Local"
 	
 	if db != nil{
 		return db, nil
@@ -43,13 +43,8 @@ func (m *Mysql)  Signin(user models.User) ( error ,*models.User){
     }
     // defer db.Close()
 
-    newUser := models.User{
-        PhoneNumber  : user.PhoneNumber,
-		Name: user.Name,
-		Email: user.Email,
-    }
-
-    result := db.Create(&newUser)
+ 
+    result := db.Create(&user)
  
     if result.Error != nil {
         fmt.Println("Error inserting data:", result.Error)

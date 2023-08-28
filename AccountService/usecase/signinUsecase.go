@@ -8,12 +8,12 @@ import (
 
 type SigninUsecase struct{
 	SigninDomain domain.SigninDomain
-	Mysql repo.Mysql
+	Repository repo.Mysql
 }
 
 
 func (s *SigninUsecase)  Signin(user models.User)( e error , u *models.User){
-	 e , u = s.SigninDomain.Signin(user)
+	 e , u = s.Repository.Signin(user)
 
 	 
 
