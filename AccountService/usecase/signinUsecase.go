@@ -13,7 +13,7 @@ type SigninUsecase struct{
 
 
 func (s *SigninUsecase)  Signin(user models.User)( e error , u *models.User){
-	 e , u = s.Signin(user)
+	 e , u = s.SigninDomain.Signin(user)
 
 	 
 

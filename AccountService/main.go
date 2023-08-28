@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
- 
+	"github.com/labstack/echo/v4"
 	"github.com/mohammadMghi/accountService/models"
 	"github.com/mohammadMghi/accountService/repo"
 	"github.com/mohammadMghi/accountService/usecase"
@@ -17,7 +17,7 @@ import (
 
 func main(){
 
-
+	e := echo.New()
  
 
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
@@ -55,9 +55,9 @@ func main(){
 	  log.Printf(" [x] Sent %s\n", body)
 
 
-	  http.HandleFunc("/json", myHandler)
+	  e.POST("/users", myHandler)
 
-	  http.ListenAndServe(":8080", nil)
+	  e.Logger.Fatal(e.Start(":1323"))
 }
 
 func failOnError(err error, msg string) {
@@ -65,14 +65,17 @@ func failOnError(err error, msg string) {
     log.Panicf("%s: %s", msg, err)
   }
 }
-func myHandler(w http.ResponseWriter, r *http.Request) {
+func myHandler(c echo.Context) error {
 	var  user models.User
 
 
-	_  = json.NewDecoder(r.Body).Decode(&user)
+	_  = json.NewDecoder(c.Request().Body).Decode(&user)
  
 	repo := repo.Mysql{}
 	signinDomain := usecase.SigninUsecase{Mysql: repo};
 
 	signinDomain.Signin(user)
+
+	return c.String(http.StatusOK , "user saved")
 }
+

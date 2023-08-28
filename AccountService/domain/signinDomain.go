@@ -6,6 +6,6 @@ import (
 )
 
 type SigninDomain interface{
-	 Signin(user models.User) models.User 
+	 Signin(user models.User)(error , *models.User) 
 }
 

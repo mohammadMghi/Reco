@@ -16,7 +16,7 @@ type Mysql struct{
 }
 
 func connectToDB() (*gorm.DB, error) {
-	dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "user:pass@tcp(127.0.0.1:3306)/recoAccountService?charset=utf8mb4&parseTime=True&loc=Local"
 	
 	if db != nil{
 		return db, nil
