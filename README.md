@@ -7,7 +7,9 @@
 	
 	 Reco architectured with microservices and contain Account Service for
 	 handle users account and ContentService for store and recommend 
-	 idea and post of people. Gateway service for handle incoming request and distribute 	 request to services. Notification Service for send notify with email, SMS, 		 	  Notifications of devices . RecommendService for handel and make a recommend
+	 idea and post of people. Gateway service for handle incoming request and distribute 	 
+	 request to services. Notification Service for send notify with email, SMS,Notifications 	
+	 of devices . RecommendService for handel and make a recommend
 	 user service or internal service.
 	 
 	 
