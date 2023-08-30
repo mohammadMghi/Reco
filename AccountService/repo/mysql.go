@@ -55,3 +55,24 @@ func (m *Mysql)  Signin(user models.User) ( error ,*models.User){
 
 	return nil , &user
 }
+
+func RollBack(user models.User) (error , *models.User){
+	db, err := connectToDB()
+    if err != nil {
+        fmt.Println("Error connecting to database:", err)
+        return err , nil
+    }
+    // defer db.Close()
+
+ 
+    result := db.Delete(&user)
+ 
+    if result.Error != nil {
+        fmt.Println("Error inserting data:", result.Error)
+        return err ,  nil
+    }
+
+    fmt.Println("Data inserted successfully!")
+
+	return nil , &user
+}

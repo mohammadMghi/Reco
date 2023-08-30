@@ -23,3 +23,4 @@ func (s *SigninUsecase)  Signin(user models.User)( e error , u *models.User){
 
 	 return nil , u
 }
+

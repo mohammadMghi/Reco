@@ -3,13 +3,15 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/mohammadMghi/accountService/models"
-	 
+	"github.com/mohammadMghi/accountService/repo"
+
 	"github.com/mohammadMghi/accountService/usecase"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -89,8 +91,49 @@ func sendAuthRabbitMQ(user  *models.User)  {
 		  ContentType: "application/json",
 		  Body:        []byte(body),
 		})
+
+
+		qq, err := ch.QueueDeclare(
+			"saga_notif", // name
+			false,   // durable
+			false,   // delete when unused
+			false,   // exclusive
+			false,   // no-wait
+			nil,     // arguments
+		  )
+
+		rollBack, err := ch.Consume(
+			qq.Name, // queue
+			"",     // consumer
+			true,   // auto-ack
+			false,  // exclusive
+			false,  // no-local
+			false,  // no-wait
+			nil,    // args
+		  )
+		  var saga SagaError
+		  go func() {
+			for u := range rollBack {
+				var user models.User
+				err := json.Unmarshal(u.Body, &saga)
+				repo.RollBack(user)
+				if err != nil {
+					log.Println("Error:", err)
+					continue
+				}
+	
+				fmt.Println("Received message:", user)
+			}
+		  }()
+ 
+		  
 	  failOnError(err, "Failed to publish a message")
 	  log.Printf(" [x] Sent %s\n", body)
 	  
 
+}
+
+
+type SagaError struct{
+	Massage string
 }
