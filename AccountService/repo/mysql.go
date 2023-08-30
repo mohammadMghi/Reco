@@ -15,7 +15,7 @@ type Mysql struct{
 	domain.SigninDomain
 }
 
-func connectToDB() (*gorm.DB, error) {
+func ConnectToDB() (*gorm.DB, error) {
 	dsn := "root:852456@tcp(127.0.0.1:3306)/restapi?charset=utf8mb4&parseTime=True&loc=Local"
 	
 	if db != nil{
@@ -36,7 +36,7 @@ func connectToDB() (*gorm.DB, error) {
 }
  
 func (m *Mysql)  Signin(user models.User) ( error ,*models.User){
-	db, err := connectToDB()
+	db, err := ConnectToDB()
     if err != nil {
         fmt.Println("Error connecting to database:", err)
         return err , nil
@@ -57,7 +57,7 @@ func (m *Mysql)  Signin(user models.User) ( error ,*models.User){
 }
 
 func RollBack(user models.User) (error , *models.User){
-	db, err := connectToDB()
+	db, err := ConnectToDB()
     if err != nil {
         fmt.Println("Error connecting to database:", err)
         return err , nil
