@@ -45,7 +45,7 @@ func (m *Mysql)  Signin(user models.User) ( error ,*models.User){
 
  
     result := db.Create(&user)
- 
+    user.ID = &result.Clone
     if result.Error != nil {
         fmt.Println("Error inserting data:", result.Error)
         return err ,  nil
@@ -66,7 +66,7 @@ func RollBack(user models.User) (error , *models.User){
 
  
     result := db.Delete(&user)
- 
+
     if result.Error != nil {
         fmt.Println("Error inserting data:", result.Error)
         return err ,  nil

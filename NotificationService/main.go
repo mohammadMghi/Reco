@@ -15,7 +15,7 @@ type SagaError struct{
 	Massage string
 }
 func main(){
-	var sagaError SagaError
+ 
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -34,21 +34,12 @@ func main(){
 
 	  ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	  defer cancel()
-	  body, err := json.Marshal(&sagaError)
+
 
 
 
 	if err != nil {
-		sagaError.Massage = err.Error()
-		err = ch.PublishWithContext(ctx,
-			"",     // exchange
-			saga.Name, // routing key
-			false,  // mandatory
-			false,  // immediate
-			amqp.Publishing {
-			  ContentType: "application/json",
-			  Body:        []byte(body),
-			})
+		fmt.Println("ERROR:", err)
 	}
 	
 	q, err := ch.QueueDeclare(
@@ -61,16 +52,7 @@ func main(){
 	)
 
 	if err != nil {
-		sagaError.Massage = err.Error()
-		err = ch.PublishWithContext(ctx,
-			"",     // exchange
-			saga.Name, // routing key
-			false,  // mandatory
-			false,  // immediate
-			amqp.Publishing {
-			  ContentType: "application/json",
-			  Body:        []byte(body),
-			})
+		fmt.Println("ERROR:", err)
 	}
 
 
@@ -88,25 +70,30 @@ func main(){
 	  )
 
 	if err != nil {
-		sagaError.Massage = err.Error()
-		err = ch.PublishWithContext(ctx,
-			"",     // exchange
-			saga.Name, // routing key
-			false,  // mandatory
-			false,  // immediate
-			amqp.Publishing {
-			  ContentType: "application/json",
-			  Body:        []byte(body),
-			})
+
+		fmt.Println("ERROR:", err)
 	}
 	  failOnError(err, "Failed to register a consumer")
 	  
 	  var forever chan struct{}
 	  
 	  go func() {
+	
 		for u := range user {
+			err = json.Unmarshal(u.Body, &user)
+			body, err := json.Marshal(user)
+			err = ch.PublishWithContext(ctx,
+				"",     // exchange
+				saga.Name, // routing key
+				false,  // mandatory
+				false,  // immediate
+				amqp.Publishing {
+				  ContentType: "application/json",
+				  Body:        []byte(body),
+				})
+ 
 			var user models.User
-			err := json.Unmarshal(u.Body, &user)
+	
 			if err != nil {
 				log.Println("Error:", err)
 				continue

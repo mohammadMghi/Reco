@@ -67,7 +67,7 @@ func (r *RabbitMQManager)RollBack(user models.User) (error , *models.User){
 		nil,     // arguments
 	  )
     // defer db.Close()
-	rollBack, err := ch.Consume(
+	usersRollBack, err := ch.Consume(
 		qq.Name, // queue
 		"",     // consumer
 		true,   // auto-ack
@@ -76,11 +76,12 @@ func (r *RabbitMQManager)RollBack(user models.User) (error , *models.User){
 		false,  // no-wait
 		nil,    // args
 	  )
-	  var saga SagaError
+ 
 	  go func() {
-		for u := range rollBack {
+	
+		for u := range usersRollBack {
 			var user models.User
-			err := json.Unmarshal(u.Body, &saga)
+			err := json.Unmarshal(u.Body, &user)
 			repo.RollBack(user)
 			if err != nil {
 				log.Println("Error:", err)
